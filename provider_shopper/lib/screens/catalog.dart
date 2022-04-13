@@ -45,17 +45,16 @@ class _AddButton extends StatelessWidget {
       (cart) => cart.items.contains(item),
     );
 
+    // uncheck the item and remove from chart if checkmark is visible
+    // If the item is not in cart, we let the user add it.
+    // We are using context.read() here because the callback
+    // is executed whenever the user taps the button. In other
+    // words, it is executed outside the build method.
     return TextButton(
-      onPressed: isInCart
-          ? null
-          : () {
-              // If the item is not in cart, we let the user add it.
-              // We are using context.read() here because the callback
-              // is executed whenever the user taps the button. In other
-              // words, it is executed outside the build method.
-              var cart = context.read<CartModel>();
-              cart.add(item);
-            },
+      onPressed: () {
+        var cart = context.read<CartModel>();
+        isInCart ? cart.remove(item) : cart.add(item);
+      },
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.pressed)) {
